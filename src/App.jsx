@@ -7,8 +7,7 @@ import HomePage from "./pages/HomePage.jsx";
 import Profile from "./components/Profile.jsx";
 import SettingPage from "./pages/SettingPage.jsx";
 import Navbar from "./components/base/Navbar.jsx";
-import JournalCard from "./components/journal/JournalCard.jsx";
-import Avatar from "./components/user/Avatar.jsx";
+import FastWriting from "./components/journal/FastWriting.jsx";
 
 export default function App() {
     return (
@@ -34,7 +33,7 @@ export default function App() {
                                 <SettingPage/>
                             </ProtectedRoute>
                         }/>
-                        <Route path = {"/new"} element = {<JournalCard/>}/>
+                        <Route path = {"/new"} element = {<FastWriting/>}/>
                     </Routes>
                 </AuthProvider>
             </BrowserRouter>

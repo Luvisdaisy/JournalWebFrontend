@@ -19,28 +19,17 @@ export default function ButtonGroup() {
     };
 
     return (
-        <div>
-            <div className = "flex justify-center mt-4">
-                <button
-                    className = {`px-4 py-2 rounded-bl-xl rounded-tl-xl w-1/3 ${pageName === "myJournals" ? "bg-blue-400 text-white" : "bg-gray-200"}`}
-                    onClick = {() => handleButtonClick("myJournals", "http://localhost:8080/api/journal/all")}
-                >
-                    World
-                </button>
-                <button
-                    className = {`px-4 py-2 w-1/3 ${pageName === "friends" ? "bg-blue-400 text-white" : "bg-gray-200"}`}
-                    onClick = {() => handleButtonClick("friends", `http://localhost:8080/api/journal/friends/${simpleUser.username}`)}
-                >
-                    Friends
-                </button>
-                <button
-                    className = {`px-4 py-2 rounded-br-xl rounded-tr-xl w-1/3 ${pageName === "messages" ? "bg-blue-400 text-white" : "bg-gray-200"}`}
-                    onClick = {() => handleButtonClick("messages")}
-                >
-                    Messages
-                </button>
+        <section>
+            <div className = {"join"}>
+                <input className = {"join-item btn w-full"} type = {"radio"} name = {"options"} aria-label = {"World"}
+                       onClick = {() => handleButtonClick("myJournals", "http://localhost:8080/api/journal/all")}/>
+                <input className = {"join-item btn w-full"} type = {"radio"} name = {"options"} aria-label = {"Friends"}
+                       onClick = {() => handleButtonClick("friends", `http://localhost:8080/api/journal/friends/${simpleUser.username}`)}/>
+                <input className = {"join-item btn w-full"} type = {"radio"} name = {"options"}
+                       aria-label = {"Messages"}
+                       onClick = {() => handleButtonClick("messages")}/>
             </div>
             {pageName === "messages" ? <Messages/> : <JournalList url = {url}/>}
-        </div>
+        </section>
     );
 }

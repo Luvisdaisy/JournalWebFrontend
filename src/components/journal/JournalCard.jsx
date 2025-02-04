@@ -1,36 +1,106 @@
 import Avatar from "../user/Avatar.jsx";
 import {useState} from "react";
+import {UseAuth} from "../../hooks/AuthContext.jsx";
+import axios from "axios";
+import {TimeCalculator} from "../../utils/TimeCalculator.js";
 
-//TODO
-export default function JournalCard() {
+export default function JournalCard({journal}) {
+    const {simpleUser} = UseAuth();
 
-    const [like, setLike] = useState(false);
-    const [comment, setComment] = useState(false);
+    const [likes, setLikes] = useState(journal.likes || []);
+    const [like, setLike] = useState(() => {
+        return likes.includes(simpleUser.username)
+    });
 
-    const likeJournal = () => {
-        setLike(!like);
+    const [commentClicked, setCommentClicked] = useState(false);
+    const [comments, setComments] = useState(journal.comments || []);
+    const [commentData, setCommentData] = useState({
+        "content": "", "simpleUser": simpleUser
+    });
+
+    const [date, setDate] = useState(TimeCalculator(journal.updatedDatetime));
+
+    const [error, setError] = useState("");
+
+    const maxContentLength = 100;
+
+    const handleCommentToggle = (e) => {
+        e.preventDefault()
+        setCommentClicked((prev) => !prev);
+    }
+
+    const handleCommentChange = (e) => {
+        setCommentData((prev) => ({...prev, content: e.target.value}));
     };
-    const commentJournal = () => {
-        setComment(!comment);
+
+    const handleCommentSubmit = async (e) => {
+        e.preventDefault()
+
+        setCommentData((prev) => ({...prev, content: ""}));
+
+        try {
+            if (commentData.content === "") {
+                setError("Comment cannot be empty");
+                return;
+            }
+            const response = await axios.put(`http://localhost:8080/api/journal/comment/${journal.id}`, commentData);
+            if (response.status === 202) {
+                const newComment = response.data;
+                setComments((prev) => [...prev, newComment]);
+            } else {
+                setError("Error posting comment");
+            }
+        } catch (error) {
+            setError("Server Error: " + error);
+        } finally {
+            setCommentData((prev) => ({...prev, content: ""}));
+        }
+    };
+
+    const handleLikeClick = async (e) => {
+        e.preventDefault()
+        try {
+            const response = await axios.put(`http://localhost:8080/api/journal/like?id=${journal.id}&username=${simpleUser.username}`);
+            if (response.status === 202) {
+                setLikes((...prev) => [...prev, simpleUser.username]);
+                setLike(true);
+            } else {
+                setError("Error liking post");
+            }
+        } catch (error) {
+            setError("Server Error: " + error);
+        }
+    }
+    const handleUnlikeClick = async (e) => {
+        e.preventDefault()
+        try {
+            const response = await axios.put(`http://localhost:8080/api/journal/unlike?id=${journal.id}&username=${simpleUser.username}`);
+            if (response.status === 202) {
+                setLikes((prev) => [...prev.filter((like) => like !== simpleUser.username)]);
+                setLike(false);
+            } else {
+                setError("Error unliking post");
+            }
+        } catch (error) {
+            setError("Server Error: " + error);
+        }
     }
     return (
-        <div className = {"card card-compact bg-amber-100 w-11/12 shadow-xl"}>
+        <div className = {"card card-compact bg-amber-100 w-11/12 shadow-xl mb-2"}>
             <div className = {"card-body"}>
                 <div className = {"flex flex-row"}>
                     <Avatar/>
                     <div className = "ml-2 flex flex-col">
-                        <p>username</p>
-                        <p>display name</p>
-                    </div>
-                    <div className = {"pt-6 ml-2"}>
-                        <p>date</p>
+                        <p>{journal.author.displayName}</p>
+                        <p>@{journal.author.username}</p>
                     </div>
                 </div>
-                <h2 className = "card-title">Shoes!</h2>
-                <p>If a dog chews shoes whose shoes does he choose?</p>
+                <h2 className = "card-title">{journal.title}</h2>
+                <p>{journal.content}</p>
+                <p>{date}</p>
             </div>
             <div className = "card-actions justify-end mr-3 pb-2">
-                <button onClick = {likeJournal} className = "btn btn-square btn-sm">
+                <button onClick = {like ? handleUnlikeClick : handleLikeClick} className = "btn btn-square btn-sm">
                     {like ? (// Solid
                         <svg xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 24 24" fill = "currentColor"
                              className = "size-6">
@@ -45,8 +115,8 @@ export default function JournalCard() {
                         </svg>
                     )}
                 </button>
-                <button onClick = {commentJournal} className = "btn btn-square btn-sm">
-                    {comment ? (// Solid
+                <button onClick = {handleCommentToggle} className = "btn btn-square btn-sm">
+                    {commentClicked ? (// Solid
                         <svg xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 24 24" fill = "currentColor"
                              className = "size-6">
                             <path fillRule = "evenodd"
@@ -63,8 +133,8 @@ export default function JournalCard() {
                     )}
                 </button>
             </div>
-            {comment ?
-                <div className = {"card-body card-bordered"}>
+            {commentClicked ?
+                <div className = {"card-body"}>
                     <div className = {"flex flex-col border-2"}>
                         <li>comment</li>
                         <li>comment</li>
@@ -72,13 +142,14 @@ export default function JournalCard() {
                         <li>comment</li>
                         <li>comment</li>
                     </div>
-                    <div className = {"form-control"}>
-                        <label htmlFor = "comment">Comment</label>
-                        <textarea id = "comment" rows = "2" placeholder = {"Say something!"}/>
-                        <button className = {"btn btn-primary w-24 "}>Submit</button>
+                    <div className = {"form-control flex flex-row"} onSubmit = {handleCommentSubmit}>
+                        <textarea className = {"textarea textarea-bordered textarea-ghost textarea-xs w-full"}
+                                  id = "comment" placeholder = {"Say something!"} onChange = {handleCommentChange}/>
+                        <button className = {"btn btn-outline btn-accent btn-md "}>Submit</button>
                     </div>
                 </div>
                 : null}
+            {error ? <div className = {"alert alert-error"}>{error}</div> : null}
         </div>
     )
 }
