@@ -52,7 +52,6 @@ export default function SetInfo() {
 
     return (
         <div className = "bg-white p-6 rounded shadow-lg w-full max-w-lg mx-auto">
-            <h2 className = "text-2xl font-bold mb-6">Personal Information</h2>
 
             {/* 头像 */}
             <div className = "mb-4 flex items-center">
@@ -133,7 +132,7 @@ export default function SetInfo() {
 
             {/* 入站日期 */}
             <div className = "mb-4">
-                <label className = "block text-gray-700 font-medium mb-1">CreatedDayssssss</label>
+                <label className = "block text-gray-700 font-medium mb-1">CreatedDays</label>
                 <p className = "text-gray-700">{userData.createdDays || "Not available"}</p>
             </div>
 
