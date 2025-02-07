@@ -1,5 +1,5 @@
 import {useState} from "react";
-import JournalList from "../JournalList.jsx";
+import JournalList from "./JournalList.jsx";
 import Messages from "../Messages.jsx";
 import {UseAuth} from "../../hooks/AuthContext.jsx";
 

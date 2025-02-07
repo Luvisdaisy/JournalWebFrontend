@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import JournalCard from "./journal/JournalCard.jsx";
+import JournalCard from "./JournalCard.jsx";
 
 export default function JournalList({url}) {
 

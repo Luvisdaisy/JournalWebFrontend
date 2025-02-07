@@ -1,11 +1,11 @@
 import {UseAuth} from "../../hooks/AuthContext.jsx";
 import {useState, useEffect} from "react";
 import axios from "axios";
-//TODO:Data update issue after follow/unfollow
+
 export default function UserCard({username}) {
     const {simpleUser} = UseAuth();
     const [user, setUser] = useState({});
-    const [relationship, setRelationship] = useState({followers: [], following: [], friends: []});
+    const [relationship, setRelationship] = useState({});
     const [error, setError] = useState("");
     const [isFollowing, setIsFollowing] = useState(false);
 
@@ -15,19 +15,16 @@ export default function UserCard({username}) {
             setUser(response.data);
 
             response = await axios.get(`http://localhost:8080/api/relationship/${username}`);
-            const relationshipData = response.data || {followers: [], following: [], friends: []};
 
-            setRelationship(relationshipData);
+            setRelationship(response.data);
 
-            const isUserFollowing = relationshipData.followers?.some(follower => follower.username === simpleUser.username);
-            setIsFollowing(isUserFollowing);
+            setIsFollowing(relationship.followers?.some(follower => follower.username === simpleUser.username));
         } catch (err) {
             setError("Failed to load user data: " + err.message);
-            console.log(err);
+            console.log(error);
         }
     };
 
-    // 监听 isFollowing 变化，重新拉取数据
     useEffect(() => {
         if (username) {
             fetchUserData();
@@ -43,16 +40,14 @@ export default function UserCard({username}) {
 
             if (response.status === 200) {
                 setIsFollowing(true);
-
-                // 确保 followers 不会变成 undefined
                 setRelationship(prev => ({
                     ...prev,
-                    followers: [...(prev.followers || []), {username: simpleUser.username}]
+                    followers: [...prev.followers, {username: simpleUser.username}]
                 }));
             }
         } catch (err) {
             setError("Failed to follow user: " + err.message);
-            console.log(err);
+            console.log(error);
         }
     };
 
@@ -65,11 +60,9 @@ export default function UserCard({username}) {
 
             if (response.status === 200) {
                 setIsFollowing(false);
-
-                // 确保 followers 变化被 React 检测到
                 setRelationship(prev => ({
                     ...prev,
-                    followers: JSON.parse(JSON.stringify(prev.followers.filter(follower => follower.username !== simpleUser.username)))
+                    followers: prev.followers.filter(follower => follower.username !== simpleUser.username)
                 }));
             }
         } catch (err) {

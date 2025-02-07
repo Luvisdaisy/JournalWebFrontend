@@ -3,6 +3,7 @@ import {useState} from "react";
 import {UseAuth} from "../../hooks/AuthContext.jsx";
 import axios from "axios";
 import {TimeCalculator} from "../../utils/TimeCalculator.js";
+import Comment from "./Comment.jsx";
 
 export default function JournalCard({journal}) {
     const {simpleUser} = UseAuth();
@@ -15,7 +16,10 @@ export default function JournalCard({journal}) {
     const [commentClicked, setCommentClicked] = useState(false);
     const [comments, setComments] = useState(journal.comments || []);
     const [commentData, setCommentData] = useState({
-        "content": "", "simpleUser": simpleUser
+        "content": "", "simpleUser": {
+            "username": simpleUser.username,
+            "displayName": simpleUser.displayName, "avatar": simpleUser.avatar
+        }
     });
 
     const [date, setDate] = useState(TimeCalculator(journal.updatedDatetime));
@@ -37,8 +41,6 @@ export default function JournalCard({journal}) {
 
     const handleCommentSubmit = async (e) => {
         e.preventDefault()
-
-        setCommentData((prev) => ({...prev, content: ""}));
 
         try {
             if (commentData.content === "") {
@@ -124,8 +126,8 @@ export default function JournalCard({journal}) {
                 <div className = {"flex flex-row"}>
                     <Avatar username = {journal.author.username} avatar = {journal.author.avatar}/>
                     <div className = "ml-2 flex flex-col">
-                        <p>{journal.author.displayName}</p>
-                        <p>@{journal.author.username}</p>
+                        <p className = {"font-black"}>{journal.author.displayName}</p>
+                        <p className = {"font-mono"}>@{journal.author.username}</p>
                     </div>
                 </div>
                 <h2 className = "card-title">{journal.title}</h2>
@@ -180,17 +182,16 @@ export default function JournalCard({journal}) {
             </div>
             {commentClicked ?
                 <div className = {"card-body"}>
-                    <div className = {"flex flex-col border-2"}>
-                        <li>comment</li>
-                        <li>comment</li>
-                        <li>comment</li>
-                        <li>comment</li>
-                        <li>comment</li>
+                    <div className = {"flex flex-col"}>
+                        {comments.map((comment) => (<Comment key = {comment.id} comment = {comment}/>))}
                     </div>
-                    <div className = {"form-control flex flex-row"} onSubmit = {handleCommentSubmit}>
-                        <textarea className = {"textarea textarea-bordered textarea-ghost textarea-xs w-full"}
-                                  id = "comment" placeholder = {"Say something!"} onChange = {handleCommentChange}/>
-                        <button className = {"btn btn-outline btn-accent btn-md "}>Submit</button>
+                    <div className = {"form-control flex flex-row gap-2"}>
+                        <textarea className = {"textarea textarea-bordered textarea-ghost textarea-xs w-full bg-white"}
+                                  id = "comment" placeholder = {"Say something!"} onChange = {handleCommentChange}
+                                  value = {commentData.content}/>
+                        <button onClick = {handleCommentSubmit}
+                                className = {"btn btn-primary btn-md "}>Submit
+                        </button>
                     </div>
                 </div>
                 : null}

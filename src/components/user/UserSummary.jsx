@@ -1,11 +1,11 @@
-import JournalList from "../JournalList.jsx";
+import JournalList from "../journal/JournalList.jsx";
 import UserCard from "./UserCard.jsx";
 import {useParams} from "react-router-dom";
 
 export default function UserSummary() {
 
     const {username} = useParams();
-
+//Follow unfollow wont change
     return (
         <div className = {""}>
             <UserCard username = {username}/>
