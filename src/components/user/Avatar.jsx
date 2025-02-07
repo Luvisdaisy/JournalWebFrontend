@@ -10,7 +10,7 @@ export default function Avatar({username, avatar}) {
     return (
         <div className = "avatar btn btn-circle">
             <div className = "w-12 rounded-full">
-                <img src = {avatar ? avatar : "src/assets/user.svg"} alt = {username} onClick = {handleClick}/>
+                <img src = {avatar ? avatar : "/assets/user.svg"} alt = {username} onClick = {handleClick}/>
             </div>
         </div>
     )

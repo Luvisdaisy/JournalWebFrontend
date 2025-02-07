@@ -4,10 +4,9 @@ import RegisterPage from "./pages/RegisterPage";
 import {AuthProvider} from "./hooks/AuthContext.jsx";
 import ProtectedRoute from "./route/ProtectedRoute.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import Profile from "./components/Profile.jsx";
 import SettingPage from "./pages/SettingPage.jsx";
 import Navbar from "./components/base/Navbar.jsx";
-import FastWriting from "./components/journal/FastWriting.jsx";
+import UserSummary from "./components/user/UserSummary.jsx";
 
 export default function App() {
     return (
@@ -25,7 +24,7 @@ export default function App() {
                         }/>
                         <Route path = "/u/:username" element = {
                             <ProtectedRoute>
-                                <Profile/>
+                                <UserSummary/>
                             </ProtectedRoute>}
                         />
                         <Route path = "/settings" element = {
@@ -33,7 +32,7 @@ export default function App() {
                                 <SettingPage/>
                             </ProtectedRoute>
                         }/>
-                        <Route path = {"/new"} element = {<FastWriting/>}/>
+                        <Route path = {"/new"} element = {<UserSummary/>}/>
                     </Routes>
                 </AuthProvider>
             </BrowserRouter>

@@ -64,8 +64,8 @@ export default function JournalList({url}) {
             {journals.map((journal) => (
                 <JournalCard key = {journal.id} journal = {journal}/>
             ))}
-            {isLoading && <p>Loading...</p>}
-            {!hasMore && !isLoading && <p>No more journals.</p>}
+            {isLoading && <span className = "loading loading-spinner loading-lg"></span>}
+            {/*{!hasMore && !isLoading && <p>No more journals.</p>}*/}
         </div>
     );
 }

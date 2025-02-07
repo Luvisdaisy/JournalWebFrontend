@@ -1,4 +1,4 @@
-import ButtonGroup from "../components/ButtonGroup.jsx";
+import ButtonGroup from "../components/journal/ButtonGroup.jsx";
 import FastWriting from "../components/journal/FastWriting.jsx";
 
 export default function HomePage() {

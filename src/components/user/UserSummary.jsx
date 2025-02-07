@@ -1,0 +1,15 @@
+import JournalList from "../JournalList.jsx";
+import UserCard from "./UserCard.jsx";
+import {useParams} from "react-router-dom";
+
+export default function UserSummary() {
+
+    const {username} = useParams();
+
+    return (
+        <div className = {""}>
+            <UserCard username = {username}/>
+            <JournalList url = {`http://localhost:8080/api/journal/${username}`}/>
+        </div>
+    )
+}

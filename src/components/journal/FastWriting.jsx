@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {UseAuth} from "../../hooks/AuthContext.jsx";
 import axios from "axios";
 
@@ -17,9 +17,7 @@ export default function FastWriting() {
         }
         try {
             const response = await axios.post("http://localhost:8080/api/journal/new", {
-                title: title,
-                content: content,
-                author: simpleUser
+                title: title, content: content, author: simpleUser
             });
             if (response.status === 201) {
                 setTitle("");
@@ -39,8 +37,14 @@ export default function FastWriting() {
         setContent(e.target.value);
     }
 
-    return (
-        <div className = "items-start space-x-4 w-full mb-2 p-4 bg-white rounded-lg shadow-md">
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => setError(""), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
+
+    return (<div className = "items-start space-x-4 w-full mb-2 p-4 bg-white rounded-lg shadow-md">
             <div className = "w-full">
                 <input
                     type = "text"
@@ -58,11 +62,9 @@ export default function FastWriting() {
                 />
 
                 <div className = "flex flex-row justify-end mt-3 gap-2">
-                    {error &&
-                        <div role = "alert" className = "alert alert-error h-12">
-                            <span>{error}</span>
-                        </div>
-                    }
+                    {error && <div role = "alert" className = "alert alert-error h-12">
+                        <span>{error}</span>
+                    </div>}
                     <button
                         className = "btn btn-primary"
                         onClick = {handlePost}

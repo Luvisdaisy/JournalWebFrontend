@@ -3,7 +3,9 @@ export function TimeCalculator(date) {
     const targetDate = new Date(date);
     const timeDifference = currentDate - targetDate;
 
-    if (timeDifference < 60 * 1000) {
+    if (timeDifference < 1000) {
+        return "Just now";
+    } else if (timeDifference < 60 * 1000) {
         return Math.floor(timeDifference / 1000) + " seconds ago";
     } else if (timeDifference < 60 * 60 * 1000) {
         return Math.floor(timeDifference / (60 * 1000)) + " minutes ago";

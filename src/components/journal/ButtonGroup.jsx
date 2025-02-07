@@ -1,7 +1,7 @@
 import {useState} from "react";
-import JournalList from "./JournalList.jsx";
-import Messages from "./Messages.jsx";
-import {UseAuth} from "../hooks/AuthContext.jsx";
+import JournalList from "../JournalList.jsx";
+import Messages from "../Messages.jsx";
+import {UseAuth} from "../../hooks/AuthContext.jsx";
 
 export default function ButtonGroup() {
     const {simpleUser} = UseAuth();
