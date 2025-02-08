@@ -24,7 +24,6 @@ export default function SetInfo() {
     const getUserData = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/api/user/${simpleUser.username}?details=true`);
-            console.log("User data fetched successfully:", response.data);
             setUserData(response.data);
         } catch (error) {
             console.error("Failed to fetch user data:", error);
@@ -43,8 +42,9 @@ export default function SetInfo() {
     const handleSave = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/api/user/${simpleUser.username}`, userData);
-            console.log("User data saved successfully:", response.data);
-            setIsEditing(false);
+            if (response.status === 200) {
+                setIsEditing(false);
+            }
         } catch (error) {
             console.error("Failed to save user data:", error);
         }
@@ -56,18 +56,16 @@ export default function SetInfo() {
             {/* 头像 */}
             <div className = "mb-4 flex items-center">
                 <img
-                    src = {userData.avatar} // 默认头像
+                    src = {userData.avatar}
                     alt = "Avatar"
                     className = "w-16 h-16 rounded-full object-cover mr-4"
                 />
                 {isEditing ? (
                     <input
-                        type = "url"
+                        type = {"file"}
                         name = "avatar"
-                        value = {userData.avatar}
                         onChange = {handleInputChange}
-                        placeholder = "Avatar URL"
-                        className = "border px-2 py-1 rounded w-full"
+                        className = "file-input w-full max-w-xs"
                     />
                 ) : (
                     <p className = "text-gray-700">{userData.avatar ? "Avatar" : "No avatar set"}</p>

@@ -22,7 +22,8 @@ export default function ButtonGroup() {
         <section>
             <div className = {"join"}>
                 <input className = {"join-item btn w-full"} type = {"radio"} name = {"options"} aria-label = {"World"}
-                       onClick = {() => handleButtonClick("myJournals", "http://localhost:8080/api/journal/all")}/>
+                       onClick = {() => handleButtonClick("myJournals", "http://localhost:8080/api/journal/all")}
+                       defaultChecked/>
                 <input className = {"join-item btn w-full"} type = {"radio"} name = {"options"} aria-label = {"Friends"}
                        onClick = {() => handleButtonClick("friends", `http://localhost:8080/api/journal/friends/${simpleUser.username}`)}/>
                 <input className = {"join-item btn w-full"} type = {"radio"} name = {"options"}

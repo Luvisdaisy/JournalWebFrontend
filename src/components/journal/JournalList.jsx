@@ -60,7 +60,7 @@ export default function JournalList({url}) {
     };
 
     return (
-        <div className = "min-h-screen flex flex-col items-center px-4 py-6 bg-gray-100">
+        <div className = "min-h-screen flex flex-col items-center px-4 py-6">
             {journals.map((journal) => (
                 <JournalCard key = {journal.id} journal = {journal}/>
             ))}

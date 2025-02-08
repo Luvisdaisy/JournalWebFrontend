@@ -7,7 +7,7 @@ export default function UserSummary() {
     const {username} = useParams();
 //Follow unfollow wont change
     return (
-        <div className = {""}>
+        <div>
             <UserCard username = {username}/>
             <JournalList url = {`http://localhost:8080/api/journal/${username}`}/>
         </div>
